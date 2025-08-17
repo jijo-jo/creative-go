@@ -1,40 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
 
-## Getting Started
 
-First, run the development server:
+## Setup and run instructions
+
+For running app in local:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
 ```
+## Concise description of the architecture
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Frontend (Next.js + React + TailwindCSS)
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Canvas Area (fabric.js)
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Manages drawing surface.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+Supports adding images, text, layers, and object transformations.
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Toolbar
 
-## Learn More
+Handles actions: upload image, add text, export, undo/redo, reset.
 
-To learn more about Next.js, take a look at the following resources:
+Layer Sidebar
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+Lists and manages layers (objects).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Selecting a layer makes it active in the canvas.
 
-## Deploy on Vercel
+Side Panel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Exposes editable properties (color, font, alignment, etc.) of the active object.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+
+2. State Management
+
+React hooks (useState, useRef) for local state.
+
+fabric.Canvas instance stored in useRef for direct manipulation.
+
+Undo/redo stack managed using arrays (history + future states).
+
+3. File Handling
+
+Image Uploads: HTML file input → FileReader → add as background image.
+
+Export: Convert canvas to PNG via canvas.toDataURL() and trigger download.
+
+## Technology Choices & Trade-offs
+
+1. Next.js (React framework)
+
+Server-side rendering (SSR) & static generation (SEO-friendly).
+
+Built-in image optimization, fast refresh, hybrid rendering.
+
+2. React (UI library)
+
+Declarative, component-based architecture → reusable UI.
+
+Large ecosystem (hooks, context, community libraries).
+
+Works well with canvas wrappers like fabric.js.
+
+3. Tailwind CSS (Styling)
+
+Utility-first → rapid UI prototyping.
+
+Consistent design system without writing custom CSS repeatedly.
+
+Small final bundle size (purges unused classes).
+
+## Known limitations
+
+1. Redo and undo - I tried to implement but on undo and redo in canvas resulting to a blank screen so avoided that peice of code 
